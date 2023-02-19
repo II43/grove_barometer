@@ -1,0 +1,11 @@
+[Unit]
+Description=Grove Barometer
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /home/$YOUR_USER_NAME_HERE$/barometer/barometer.py
+
+[Install]
+WantedBy=multi-user.target
