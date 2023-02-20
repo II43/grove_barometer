@@ -2,10 +2,10 @@
 import sys
 import time
 import math
+import requests
 from grove.gpio import GPIO
 import Adafruit_BMP.BMP085 as BMP085
- 
- 
+
 charmap = {
     '0': 0x3f,
     '1': 0x06,
@@ -190,7 +190,13 @@ def main():
     count = 1
 
     while True:
-        if (count % 5) == 0:
+        if (count % 721) == 0:
+            temperature = sensor.read_temperature()
+            print(f'TMEP: sending temperature = {temperature:.1f} degC')
+            x = requests.get(f'http://bu38cm-38wjr5.tmep.cz/?temp={temperature:.1f}')
+            print(f'Status code: {x.status_code}')
+            count = 1
+        elif (count % 5) == 0:
             pressure = sensor.read_pressure()
             pressure = math.floor(pressure*100)
             print(f'Pressure = {pressure} hPa')
