@@ -6,6 +6,10 @@ import requests
 from grove.gpio import GPIO
 import Adafruit_BMP.BMP085 as BMP085
 
+# ----------------------------------------------------
+# 4 digit display
+# ----------------------------------------------------
+
 charmap = {
     '0': 0x3f,
     '1': 0x06,
@@ -28,7 +32,6 @@ STARTADDR = 0xC0
 BRIGHT_DARKEST = 0
 BRIGHT_DEFAULT = 2
 BRIGHT_HIGHEST = 7
- 
  
 class Grove4DigitDisplay(object):
     colon_index = 1
@@ -173,12 +176,27 @@ class Grove4DigitDisplay(object):
  
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._stop()
+
+
+# ----------------------------------------------------
+# Micro PIR bmp_sensor (AM312)
+# https://www.laskakit.cz/arduino-micro-pir-detektor-pohybu-am312/
+# ----------------------------------------------------
+
+class MicroPIR(object):
+    def __init__(self, pin_number):
+        self.d_in = GPIO(pin_number, direction=GPIO.IN)
+
+    def get_value(self):
+        return self.d_in.read()
+
+# ----------------------------------------------------
+# Main
+# ----------------------------------------------------
  
- 
-Grove = Grove4DigitDisplay
-sensor = BMP085.BMP085()
- 
- 
+bmp_sensor = BMP085.BMP085()
+pir_sensor = MicroPIR(23)
+  
 def main():
     if len(sys.argv) < 3:
         # print('Usage: {} clk dio'.format(sys.argv[0]))
@@ -190,14 +208,19 @@ def main():
     count = 1
 
     while True:
-        if (count % 721) == 0:
-            temperature = sensor.read_temperature()
+        movement  = pir_sensor.get_value()
+        print(f'PIR: {movement}')
+        if movement:
+            print('Movement detected!')
+            display.show('-__-')
+        elif (count % 721) == 0:
+            temperature = bmp_sensor.read_temperature()
             print(f'TMEP: sending temperature = {temperature:.1f} degC')
-            x = requests.get(f'http://bu38cm-38wjr5.tmep.cz/?temp={temperature:.1f}')
+            x = requests.get(f'http://bu68cm-35wjr8.tmep.cz/?temp={temperature:.1f}')
             print(f'Status code: {x.status_code}')
             count = 1
         elif (count % 5) == 0:
-            pressure = sensor.read_pressure()
+            pressure = bmp_sensor.read_pressure()
             pressure = math.floor(pressure*100)
             print(f'Pressure = {pressure} hPa')
             display.show(f'{pressure}')
@@ -207,7 +230,7 @@ def main():
             display.show(t)
             display.set_colon(True)
         else:
-            temperature = sensor.read_temperature()
+            temperature = bmp_sensor.read_temperature()
             print(f'Temperature = {temperature:.2f} degC')
             temperature = math.floor(temperature*100)
             display.show(f'{temperature}')
