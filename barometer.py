@@ -206,13 +206,17 @@ def main():
         display = Grove4DigitDisplay(int(sys.argv[1]), int(sys.argv[2]))
 
     count = 1
-
+    movement_count = 0
     while True:
         movement  = pir_sensor.get_value()
         print(f'PIR: {movement}')
         if movement:
-            print('Movement detected!')
+            movement_count = movement_count + 1
+            print(f'Movement detected!')
             display.show('-__-')
+            print(f'PIR: sending movement count = {movement_count}')
+            x = requests.get(f'http://f7jfdg-eve888.tmep.cz/?temp={movement_count}')
+            print(f'Status code: {x.status_code}')
         elif (count % 721) == 0:
             temperature = bmp_sensor.read_temperature()
             print(f'TMEP: sending temperature = {temperature:.1f} degC')
