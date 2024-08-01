@@ -207,10 +207,15 @@ def main():
 
     count = 1
     movement_count = 0
+    last_movement_day = time.strftime("%Y%m%d", time.localtime(time.time()))
     while True:
         movement  = pir_sensor.get_value()
         print(f'PIR: {movement}')
         if movement:
+            new_movement_day = time.strftime("%Y%m%d", time.localtime(time.time()))
+            if new_movement_day != last_movement_day:
+                movement_count = 0
+                last_movement_day = new_movement_day
             movement_count = movement_count + 1
             print(f'Movement detected!')
             display.show('-__-')
