@@ -1,0 +1,4 @@
+# requirements.txt
+dotenv
+grove.py
+Adafruit_BMP

@@ -1,10 +1,28 @@
 #!/usr/bin/python3
+import os
 import sys
 import time
 import math
 import requests
+from dotenv import load_dotenv
+
 from grove.gpio import GPIO
 import Adafruit_BMP.BMP085 as BMP085
+
+# ----------------------------------------------------
+# Settings
+# ----------------------------------------------------
+
+load_dotenv()
+
+TMEP_PIR_KEY = os.getenv('TMEP_PIR_KEY')
+TMEP_TEMPERATURE_KEY = os.getenv('TMEP_TEMPERATURE_KEY')
+
+if not TMEP_PIR_KEY or not TMEP_TEMPERATURE_KEY:
+    raise ValueError('You must set TMEP_PIR_KEY and TMEP_TEMPERATURE_KEY environment variable in .env file before running this!')
+
+# data are sent roughly every 5s * TMEP_TEMPERATURE_PERIOD
+TMEP_TEMPERATURE_PERIOD = 721 
 
 # ----------------------------------------------------
 # 4 digit display
@@ -220,12 +238,13 @@ def main():
             print(f'Movement detected!')
             display.show('-__-')
             print(f'PIR: sending movement count = {movement_count}')
-            x = requests.get(f'http://f7jfdg-eve888.tmep.cz/?temp={movement_count}')
+            x = requests.get(f'http://{TMEP_PIR_KEY}.tmep.cz/?temp={movement_count}')
             print(f'Status code: {x.status_code}')
-        elif (count % 721) == 0:
+        elif (count % TMEP_TEMPERATURE_PERIOD) == 0:
+            # Sending temperature data to the server
             temperature = bmp_sensor.read_temperature()
             print(f'TMEP: sending temperature = {temperature:.1f} degC')
-            x = requests.get(f'http://bu68cm-35wjr8.tmep.cz/?temp={temperature:.1f}')
+            x = requests.get(f'http://{TMEP_TEMPERATURE_KEY}.tmep.cz/?temp={temperature:.1f}')
             print(f'Status code: {x.status_code}')
             count = 1
         elif (count % 5) == 0:
