@@ -13,4 +13,4 @@ CMD ["python3", "barometer.py"]
 # docker build -t barometer-app .
 
 # To run it:
-# docker run -d --name barometer -v $(pwd)/.env:/app/.env:ro barometer-app
+# docker run -d --name barometer -v $(pwd)/.env:/app/.env:ro --restart unless-stopped barometer-app
