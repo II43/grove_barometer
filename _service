@@ -1,8 +1,8 @@
 <services>
-  <service mode="buildtime" name="replace_using_package_version">
+  <service mode="buildtime" name="regex_replace">
     <param name="file">Dockerfile</param>
     <param name="regex">%PKG_VERSION%</param>
-    <param name="package">python311-base</param>
+    <param name="replace">0.0.1</param>
   </service>
   <service mode="buildtime" name="docker_label_helper"/>
 </services>
