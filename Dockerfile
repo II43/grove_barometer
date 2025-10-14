@@ -21,6 +21,10 @@ LABEL org.opencontainers.image.created="%BUILDTIME%"
 # Additional required packages
 # RUN apt-get update && apt-get install -y PACKAGE_HERE
 
+# Create and activate Python virtual environment in /opt/venv
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 # Python wrapper application
 WORKDIR /app
 COPY requirements.txt .
