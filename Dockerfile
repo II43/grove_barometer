@@ -12,8 +12,8 @@ FROM opensuse/bci/python:3.11.13-39.24
 # labelprefix=org.opensuse.grove_barometer
 LABEL org.opencontainers.image.title="Grove Barometer Container"
 LABEL org.opencontainers.image.description="A container for running the Grove Barometer Python application."
-LABEL org.opencontainers.image.version="%PKG_VERSION%.%RELEASE%"
-LABEL org.opensuse.reference="registry.opensuse.org/home:llansky3/grove_barometer:%PKG_VERSION%.%RELEASE%"
+LABEL org.opencontainers.image.version="%PKG_VERSION%"
+LABEL org.opensuse.reference="registry.opensuse.org/home:llansky3/grove_barometer:%PKG_VERSION%"
 LABEL org.openbuildservice.disturl="%DISTURL%"
 LABEL org.opencontainers.image.created="%BUILDTIME%"
 # endlabelprefix
