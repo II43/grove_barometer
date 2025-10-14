@@ -5,7 +5,7 @@
 
 # Use the SUSE Base Container Image for Python 3.11
 # https://registry.opensuse.org/cgi-bin/cooverview
-FROM opensuse/bci/python:3.11
+FROM registry.suse.com/opensuse/bci/python:3.11
 
 # Define labels according to openSUSE and OCI standards.
 # The 'labelprefix' helps avoid repetition but is optional.
